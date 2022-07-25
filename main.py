@@ -34,7 +34,7 @@ def main():
                 }
                 new_attempt = reviews['new_attempts'][0]
 
-                if new_attempt['is_negative'] == True:
+                if new_attempt['is_negative']:
                     text = f"""У вас проверили работу "{new_attempt['lesson_title']}". К сожалению, в работе нашлись ошибки. Ссылка - {new_attempt['lesson_url']}"""
                     bot = telegram.Bot(token=bot_token)
                     bot.send_message(chat_id=tg_chat_id, text=text)
