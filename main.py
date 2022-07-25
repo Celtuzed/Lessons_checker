@@ -7,6 +7,9 @@ import telegram
 
 from dotenv import load_dotenv
 
+TIMEOUT = 5
+
+
 def send_message(bot_token, tg_chat_id, text):
     bot = telegram.Bot(token=bot_token)
     bot.send_message(chat_id=tg_chat_id, text=text)
@@ -38,16 +41,16 @@ def main():
                     send_message(bot_token, tg_chat_id, text)
                 else:
                     text = f"""У вас проверили работу "{new_attempt['lesson_title']}". Преподавателю всё понравилось, можно приступать к следующему уроку! Ссылка - {new_attempt['lesson_url']}"""
-
                     send_message(bot_token, tg_chat_id, text)
             if reviews['status'] == "timeout":
                 params = {
                     "timestamp": reviews['timestamp_to_request']
                 }
         except requests.exceptions.ReadTimeout:
-            print("ReadTimeout")
+            pass
         except requests.exceptions.ConnectionError:
             print("ConnectionError")
+            time.sleep(TIMEOUT)
 
 if __name__ == '__main__':
     main()
