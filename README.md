@@ -25,6 +25,6 @@ TG_TOKEN=.......
 CHAT_ID=........
 ```  
 
--`DVMN_TOKEN` - Токен, который нужно будет получить во вкладке [API](https://dvmn.org/api/docs/), при регистрации на сайте [dvmn](https://dvmn.org/).
--`TG_TOKEN` - Токен бота, который можно получить при создании у [отца ботов](https://t.me/BotFather)
--`CHAT_ID` - ID чата с вами, который можно получить у [бота](https://t.me/userinfobot)
+- `DVMN_TOKEN` - Токен, который нужно будет получить во вкладке [API](https://dvmn.org/api/docs/), при регистрации на сайте [dvmn](https://dvmn.org/).
+- `TG_TOKEN` - Токен бота, который можно получить при создании у [отца ботов](https://t.me/BotFather)
+- `CHAT_ID` - ID чата с вами, который можно получить у [бота](https://t.me/userinfobot)
