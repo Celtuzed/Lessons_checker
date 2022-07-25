@@ -6,7 +6,6 @@ import requests
 import telegram
 
 from dotenv import load_dotenv
-from pprint import pprint
 
 def send_message(bot_token, tg_chat_id, text):
     bot = telegram.Bot(token=bot_token)
@@ -29,7 +28,6 @@ def main():
             response = requests.get(long_polling_url, params=params, headers=headers)
             response.raise_for_status()
             response = response.json()
-            pprint(response)
             if response['status'] == "found":
                 params = {
                     "timestamp": response['last_attempt_timestamp']
