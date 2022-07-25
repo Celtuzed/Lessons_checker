@@ -32,12 +32,12 @@ def main():
                 params = {
                     "timestamp": reviews['last_attempt_timestamp']
                 }
-                new_attempts = reviews['new_attempts'][0]
-                if new_attempts['is_negative'] == True:
-                    text = f"""У вас проверили работу "{new_attempts['lesson_title']}". К сожалению, в работе нашлись ошибки. Ссылка - {new_attempts['lesson_url']}"""
+                new_attempt = reviews['new_attempts'][0]
+                if new_attempt['is_negative'] == True:
+                    text = f"""У вас проверили работу "{new_attempt['lesson_title']}". К сожалению, в работе нашлись ошибки. Ссылка - {new_attempt['lesson_url']}"""
                     send_message(bot_token, tg_chat_id, text)
                 else:
-                    text = f"""У вас проверили работу "{new_attempts['lesson_title']}". Преподавателю всё понравилось, можно приступать к следующему уроку! Ссылка - {new_attempts['lesson_url']}"""
+                    text = f"""У вас проверили работу "{new_attempt['lesson_title']}". Преподавателю всё понравилось, можно приступать к следующему уроку! Ссылка - {new_attempt['lesson_url']}"""
 
                     send_message(bot_token, tg_chat_id, text)
             if reviews['status'] == "timeout":
