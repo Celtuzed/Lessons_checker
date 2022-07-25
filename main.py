@@ -10,10 +10,6 @@ from dotenv import load_dotenv
 TIMEOUT = 5
 
 
-def send_message(bot_token, tg_chat_id, text):
-    bot = telegram.Bot(token=bot_token)
-    bot.send_message(chat_id=tg_chat_id, text=text)
-
 def main():
     load_dotenv()
     bot_token = os.getenv("TG_TOKEN")
@@ -32,20 +28,27 @@ def main():
             response.raise_for_status()
             reviews = response.json()
             if reviews['status'] == "found":
+
                 params = {
                     "timestamp": reviews['last_attempt_timestamp']
                 }
                 new_attempt = reviews['new_attempts'][0]
+
                 if new_attempt['is_negative'] == True:
                     text = f"""У вас проверили работу "{new_attempt['lesson_title']}". К сожалению, в работе нашлись ошибки. Ссылка - {new_attempt['lesson_url']}"""
-                    send_message(bot_token, tg_chat_id, text)
+                    bot = telegram.Bot(token=bot_token)
+                    bot.send_message(chat_id=tg_chat_id, text=text)
+
                 else:
                     text = f"""У вас проверили работу "{new_attempt['lesson_title']}". Преподавателю всё понравилось, можно приступать к следующему уроку! Ссылка - {new_attempt['lesson_url']}"""
-                    send_message(bot_token, tg_chat_id, text)
+                    bot = telegram.Bot(token=bot_token)
+                    bot.send_message(chat_id=tg_chat_id, text=text)
+
             if reviews['status'] == "timeout":
                 params = {
                     "timestamp": reviews['timestamp_to_request']
                 }
+
         except requests.exceptions.ReadTimeout:
             pass
         except requests.exceptions.ConnectionError:
