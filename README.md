@@ -13,7 +13,7 @@ pip install -r requirements.txt
 Для запуска скрипта нужно ввести в консоль:
 
 ```
-  Python3 main.py
+python main.py
 ```
 
 ### Переменные окружения
