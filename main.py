@@ -27,12 +27,12 @@ def main():
         try:
             response = requests.get(long_polling_url, params=params, headers=headers)
             response.raise_for_status()
-            response = response.json()
-            if response['status'] == "found":
+            reviews = response.json()
+            if reviews['status'] == "found":
                 params = {
-                    "timestamp": response['last_attempt_timestamp']
+                    "timestamp": reviews['last_attempt_timestamp']
                 }
-                new_attempts = response['new_attempts'][0]
+                new_attempts = reviews['new_attempts'][0]
                 if new_attempts['is_negative'] == True:
                     text = f"""У вас проверили работу "{new_attempts['lesson_title']}". К сожалению, в работе нашлись ошибки. Ссылка - {new_attempts['lesson_url']}"""
                     send_message(bot_token, tg_chat_id, text)
@@ -40,9 +40,9 @@ def main():
                     text = f"""У вас проверили работу "{new_attempts['lesson_title']}". Преподавателю всё понравилось, можно приступать к следующему уроку! Ссылка - {new_attempts['lesson_url']}"""
 
                     send_message(bot_token, tg_chat_id, text)
-            if response['status'] == "timeout":
+            if reviews['status'] == "timeout":
                 params = {
-                    "timestamp": response['timestamp_to_request']
+                    "timestamp": reviews['timestamp_to_request']
                 }
         except requests.exceptions.ReadTimeout:
             print("ReadTimeout")
