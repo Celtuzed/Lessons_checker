@@ -12,7 +12,7 @@ TIMEOUT = 5
 
 
 def main():
-    logging.info('Бот запущен')
+    logging.warning('Бот запущен')
     load_dotenv()
 
     bot_token = os.getenv("TG_TOKEN")
