@@ -1,6 +1,7 @@
 import os
 import json
 import time
+import logging
 
 import requests
 import telegram
@@ -11,7 +12,9 @@ TIMEOUT = 5
 
 
 def main():
+    logging.info('Бот запущен')
     load_dotenv()
+
     bot_token = os.getenv("TG_TOKEN")
     token = os.getenv("DVMN_TOKEN")
     tg_chat_id = os.getenv("TG_CHAT_ID")
