@@ -75,8 +75,8 @@ def main():
 
         except requests.exceptions.ReadTimeout:
             pass
-        except requests.exceptions.ConnectionError:
-            logger.exception('ConnectionError')
+        except requests.exceptions.ConnectionError as error:
+            logger.exception(error, exc_info=True)
             time.sleep(TIMEOUT)
 
 if __name__ == '__main__':
