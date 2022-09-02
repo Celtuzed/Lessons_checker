@@ -11,20 +11,41 @@ from dotenv import load_dotenv
 TIMEOUT = 5
 
 
-def main():
-    logging.warning('Бот запущен')
-    load_dotenv()
+class TelegramLogsHandler(logging.Handler):
 
-    bot_token = os.getenv("TG_TOKEN")
+    def __init__(self, tg_bot, tg_chat_id):
+        super().__init__()
+        self.chat_id = tg_chat_id
+        self.tg_bot = tg_bot
+
+    def emit(self, record):
+        log_entry = self.format(record)
+        self.tg_bot.send_message(chat_id=self.chat_id, text=log_entry)
+
+
+def main():
+    load_dotenv()
+    tg_token = os.getenv("TG_TOKEN")
     token = os.getenv("DVMN_TOKEN")
     tg_chat_id = os.getenv("TG_CHAT_ID")
     long_polling_url = "https://dvmn.org/api/long_polling/"
+    tg_bot = telegram.Bot(token=tg_token)
+
+    logging.basicConfig(format="%(message)s")
+    logger = logging.getLogger("Название логера")
+    logger.setLevel(logging.INFO)
+    handler = TelegramLogsHandler(tg_bot, tg_chat_id)
+    logger.addHandler(handler)
+
+    logger.info('Запуск бота')
+ 
     headers = {
         "Authorization" : f"Token {token}"
     }
     params = {
         "timestamp": time.time()
     }           
+
     while True:
         try:
             response = requests.get(long_polling_url, params=params, headers=headers)
@@ -39,15 +60,15 @@ def main():
 
                 if new_attempt['is_negative']:
                     text = f"""У вас проверили работу "{new_attempt['lesson_title']}". К сожалению, в работе нашлись ошибки. Ссылка - {new_attempt['lesson_url']}"""
-                    bot = telegram.Bot(token=bot_token)
+                    bot = telegram.Bot(token=tg_token)
                     bot.send_message(chat_id=tg_chat_id, text=text)
 
                 else:
                     text = f"""У вас проверили работу "{new_attempt['lesson_title']}". Преподавателю всё понравилось, можно приступать к следующему уроку! Ссылка - {new_attempt['lesson_url']}"""
-                    bot = telegram.Bot(token=bot_token)
+                    bot = telegram.Bot(token=tg_token)
                     bot.send_message(chat_id=tg_chat_id, text=text)
 
-            if reviews['status'] == "timeout":
+            elif reviews['status'] == "timeout":
                 params = {
                     "timestamp": reviews['timestamp_to_request']
                 }
@@ -55,8 +76,9 @@ def main():
         except requests.exceptions.ReadTimeout:
             pass
         except requests.exceptions.ConnectionError:
-            print("ConnectionError")
+            logger.exception('ConnectionError')
             time.sleep(TIMEOUT)
 
 if __name__ == '__main__':
     main()
+    
