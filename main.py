@@ -9,7 +9,7 @@ import telegram
 from dotenv import load_dotenv
 
 TIMEOUT = 5
-
+logger = logging.getLogger("tg_logger")
 
 class TelegramLogsHandler(logging.Handler):
 
@@ -32,7 +32,6 @@ def main():
     tg_bot = telegram.Bot(token=tg_token)
 
     logging.basicConfig(format="%(message)s")
-    logger = logging.getLogger("Название логера")
     logger.setLevel(logging.INFO)
     handler = TelegramLogsHandler(tg_bot, tg_chat_id)
     logger.addHandler(handler)
